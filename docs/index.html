@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LearnRL — Interactive Reinforcement Learning</title>
+  <meta name="description" content="LearnRL is an interactive RL sandbox and curriculum inspired by LearnGitBranching. Visualize MDPs, values, and policies. Solve levels." />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="logo">◇</span>
+      <div>
+        <h1>LearnRL</h1>
+        <p class="tag">Interactive RL sandbox · inspired by LearnGitBranching</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#play">Play</a>
+      <a href="#curriculum">Curriculum</a>
+      <a href="https://github.com/alisadeghiaghili/learn-rl" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://github.com/alisadeghiaghili/learn-rl#install" target="_blank" rel="noopener">CLI</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Learn by moving state</p>
+      <h2>Type commands.<br />Watch V, π, and Q move.</h2>
+      <p>
+        Reinforcement learning is invisible until you see it. LearnRL turns states,
+        rewards, value functions, and policies into a live board — then challenges
+        you with levels, just like LearnGitBranching does for git.
+      </p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#play">Open sandbox</a>
+        <a class="btn ghost" href="#curriculum">See curriculum</a>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <pre class="mini-map">
+A · ·      V(s)           π(s)
+· █ ·    +8.0 +2.1 −1.4   → → →
+· · G    +2.1 +5.0 +10    → → G
+         policy → goal · Q-learning live
+      </pre>
+    </div>
+  </section>
+
+  <section id="play" class="play">
+    <div class="play-head">
+      <h2>Sandbox</h2>
+      <p>Click the map or use the command box. This is a faithful JS port of the tabular engine.</p>
+    </div>
+
+    <div class="board">
+      <div class="board-main">
+        <div class="view-tabs" role="tablist">
+          <button class="tab active" data-view="map" role="tab">Map</button>
+          <button class="tab" data-view="values" role="tab">Values V</button>
+          <button class="tab" data-view="policy" role="tab">Policy π</button>
+          <button class="tab" data-view="q" role="tab">Action values Q</button>
+        </div>
+        <div id="viewport" class="viewport"></div>
+        <div class="legend">
+          <span><i class="dot agent"></i> agent</span>
+          <span><i class="dot start"></i> start</span>
+          <span><i class="dot goal"></i> goal</span>
+          <span><i class="dot pit"></i> pit</span>
+          <span><i class="dot wall"></i> wall</span>
+        </div>
+      </div>
+
+      <aside class="side">
+        <div class="panel">
+          <h3>Level</h3>
+          <select id="levelSelect" aria-label="Choose level"></select>
+          <p id="levelDesc" class="desc"></p>
+          <div id="goalBox" class="goal"></div>
+        </div>
+
+        <div class="panel">
+          <h3>Run</h3>
+          <div class="btn-row">
+            <button class="btn small" data-cmd="step">Step</button>
+            <button class="btn small" data-cmd="step 10">Step ×10</button>
+            <button class="btn small" data-cmd="reset">Reset</button>
+            <button class="btn small" data-cmd="train q 50">Train Q</button>
+            <button class="btn small" data-cmd="train sarsa 50">Train SARSA</button>
+            <button class="btn small" data-cmd="train vi 40">Value Iteration</button>
+            <button class="btn small" data-cmd="evaluate 15">Evaluate</button>
+            <button class="btn small" data-cmd="undo">Undo</button>
+          </div>
+          <label class="field">
+            <span>ε (explore)</span>
+            <input id="eps" type="range" min="0" max="1" step="0.05" value="0.15" />
+            <output id="epsOut">0.15</output>
+          </label>
+          <label class="field">
+            <span>α (step)</span>
+            <input id="alpha" type="range" min="0.05" max="1" step="0.05" value="0.25" />
+            <output id="alphaOut">0.25</output>
+          </label>
+          <label class="field">
+            <span>γ (discount)</span>
+            <input id="gamma" type="range" min="0.5" max="1" step="0.05" value="0.9" />
+            <output id="gammaOut">0.90</output>
+          </label>
+        </div>
+
+        <div class="panel">
+          <h3>Command</h3>
+          <form id="cmdForm" class="cmd-form">
+            <input id="cmdInput" type="text" spellcheck="false"
+              placeholder="train q 50  ·  values  ·  help" autocomplete="off" />
+            <button class="btn primary small" type="submit">Run</button>
+          </form>
+          <pre id="output" class="output">Ready. Type <b>help</b>.</pre>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="curriculum" class="curriculum">
+    <div class="play-head">
+      <h2>Curriculum</h2>
+      <p>Aligned with Sutton &amp; Barto · David Silver · Spinning Up. Python CLI goes deeper.</p>
+    </div>
+    <div class="seq-grid" id="seqGrid"></div>
+  </section>
+
+  <section class="compare">
+    <h2>Why this works</h2>
+    <div class="compare-grid">
+      <article>
+        <h3>Invisible → visible</h3>
+        <p>Git is invisible on the CLI; LearnGitBranching draws the tree. MDPs are worse — LearnRL draws the board, V, and π after every command.</p>
+      </article>
+      <article>
+        <h3>Command golf</h3>
+        <p>Every mutating command counts. Match par like git golf in LGB. Reset and undo keep the loop honest.</p>
+      </article>
+      <article>
+        <h3>Levels, not lectures</h3>
+        <p>Goals are checked live: reach a return, match V, match a policy. You learn by succeeding, not by finishing a video.</p>
+      </article>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div>
+      <strong>LearnRL</strong> · MIT · Built for learners of tabular RL
+    </div>
+    <div class="foot-links">
+      <a href="https://github.com/alisadeghiaghili/learn-rl">Source</a>
+      <a href="https://github.com/pcottle/learnGitBranching">LearnGitBranching</a>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
